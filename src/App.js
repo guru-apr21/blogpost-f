@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import loginService from "./services/login";
+import Blogs from "./components/Blogs";
+import LoginForm from "./components/LoginForm";
 
-function App() {
+const App = () => {
+  const [user, setUser] = useState(null);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedInAppUser");
+    if (loggedUserJSON) {
+      setUser(JSON.parse(loggedUserJSON));
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  const handleLogin = async (credentials) => {
+    try {
+      const data = await loginService.login(credentials);
+      if (data) {
+        window.localStorage.setItem("loggedInAppUser", JSON.stringify(data));
+        setUser(data);
+      }
+    } catch (err) {
+      setMessage("Invalid credentials");
+      setTimeout(() => setMessage(""), 4000);
+    }
+  };
+
+  const handleLogout = () => {
+    window.localStorage.clear();
+    setUser(null);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {user === null && (
+        <>
+          <h1>login to application</h1>
+          {message && (
+            <p className="notification" style={{ color: "red" }}>
+              {message}
+            </p>
+          )}
+          <LoginForm handleLogin={handleLogin}></LoginForm>
+        </>
+      )}
+      {user !== null && <Blogs user={user} handleLogout={handleLogout}></Blogs>}
+    </>
   );
-}
+};
 
 export default App;

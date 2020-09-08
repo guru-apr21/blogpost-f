@@ -24,7 +24,7 @@ const BlogFrom = ({ handleCreate }) => {
       </div>
       <div style={showWhenVisible}>
         <h2>Create new</h2>
-        <form onSubmit={create}>
+        <form onSubmit={create} className="blogForm">
           <label htmlFor="title">Title: </label>
           <input
             id="title"

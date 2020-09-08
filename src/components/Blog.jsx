@@ -5,7 +5,7 @@ const Blog = ({ blog, incrementLikes, deleteBlog }) => {
 
   return (
     <div className="card">
-      <p>
+      <p className="visible">
         {blog.title} {blog.author + " "}{" "}
         <button onClick={() => setVisible(!visible)}>
           {visible ? "hide" : "view"}
@@ -14,7 +14,7 @@ const Blog = ({ blog, incrementLikes, deleteBlog }) => {
       {visible && (
         <>
           {" "}
-          <p>{blog.url}</p>
+          <p className="notVisible">{blog.url}</p>
           <p>
             likes {blog.likes}{" "}
             <button onClick={() => incrementLikes(blog.id)}>like</button>
